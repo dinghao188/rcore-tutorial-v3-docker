@@ -3,22 +3,22 @@ LABEL maintainer="dinghao188" \
       version="1.0" \
       description="ubuntu 18.04 with tools for tsinghua's rCore-Tutorial-V3"
 
+#install some deps
+RUN set -x \
+    && apt-get update \
+    && apt-get install -y curl wget autoconf automake autotools-dev curl libmpc-dev libmpfr-dev libgmp-dev \
+              gawk build-essential bison flex texinfo gperf libtool patchutils bc xz-utils \
+              zlib1g-dev libexpat-dev pkg-config  libglib2.0-dev libpixman-1-dev git tmux python3 
 
+#install rust and qemu
 RUN set -x; \
     RUSTUP='/root/rustup.sh' \
-
-    && apt-get update \
-    && apt-get -y install curl wget \
     && cd $HOME \
-
-    #isntall rust \
+    #install rust
     && curl https://sh.rustup.rs -sSf > $RUSTUP && chmod +x $RUSTUP \
     && $RUSTUP -y --default-toolchain nightly --profile minimal \
 
     #compile qemu
-    && apt-get install -y autoconf automake autotools-dev curl libmpc-dev libmpfr-dev libgmp-dev \
-              gawk build-essential bison flex texinfo gperf libtool patchutils bc xz-utils \
-              zlib1g-dev libexpat-dev pkg-config  libglib2.0-dev libpixman-1-dev git tmux python3 \
     && wget https://ftp.osuosl.org/pub/blfs/conglomeration/qemu/qemu-5.0.0.tar.xz \
     && tar xvJf qemu-5.0.0.tar.xz \
     && cd qemu-5.0.0 \
@@ -26,10 +26,10 @@ RUN set -x; \
     && make -j$(nproc) install \
     && cd $HOME && rm -rf qemu-5.0.0 qemu-5.0.0.tar.xz
 
-    #get code for rcore-tutorial-v3
+#get code for rcore-tutorial-v3
 RUN cd $HOME && git clone https://github.com/rcore-os/rCore-Tutorial-v3
 
-    #for chinese network
+#for chinese network
 RUN set -x; \
     APT_CONF='/etc/apt/sources.list'; \
     CARGO_CONF='/root/.cargo/config'; \
