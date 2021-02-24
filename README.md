@@ -1,1 +1,1 @@
-# rcore-tutorial-v3-docker
+# Dockerfile for dinghao188/rcore-tutorial
