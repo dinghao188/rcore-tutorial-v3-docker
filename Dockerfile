@@ -17,7 +17,6 @@ RUN set -x; \
     #install rust
     && curl https://sh.rustup.rs -sSf > $RUSTUP && chmod +x $RUSTUP \
     && $RUSTUP -y --default-toolchain nightly --profile minimal \
-
     #compile qemu
     && wget https://ftp.osuosl.org/pub/blfs/conglomeration/qemu/qemu-5.0.0.tar.xz \
     && tar xvJf qemu-5.0.0.tar.xz \
@@ -41,3 +40,11 @@ RUN set -x; \
     && echo "replace-with = 'ustc'" >> $CARGO_CONF \
     && echo '[source.ustc]' >> $CARGO_CONF \
     && echo 'registry = "git://mirrors.ustc.edu.cn/crates.io-index"' >> $CARGO_CONF
+
+# for vscode ssh-remote connection
+RUN apt update \
+    && apt install openssh-server net-tools -y \
+    && sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config \
+    && echo "root:123456" | chpasswd \
+    && EXPOSE 22 \
+    && ENTRYPOINT service ssh restart && bash
