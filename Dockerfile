@@ -45,6 +45,7 @@ RUN set -x; \
 RUN apt update \
     && apt install openssh-server net-tools -y \
     && sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config \
-    && echo "root:123456" | chpasswd \
-    && EXPOSE 22 \
-    && ENTRYPOINT service ssh restart && bash
+    && echo "root:123456" | chpasswd
+    
+EXPOSE 22
+ENTRYPOINT service ssh restart && bash
